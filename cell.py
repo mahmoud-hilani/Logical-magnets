@@ -4,10 +4,9 @@ from abc import ABC, abstractmethod
 
 class Cell:
     def __str__(self):
-        return "."  # Default representation for an empty cell or generic cell
-
+        return "."  
 class MovableCell(Cell, ABC):
-    # Define directions for movement: (dx, dy) for up, down, left, right
+    # Define directions for movement
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
     @abstractmethod
@@ -16,7 +15,6 @@ class MovableCell(Cell, ABC):
 
 class RedCell(MovableCell):
     def interact_with(self, board, x, y):
-        # Use directions to perform attraction in all four directions
         for dx, dy in self.directions:
             self.attract_recursive(board, x, y, dx, dy)
 
@@ -44,7 +42,6 @@ class RedCell(MovableCell):
 
 class PurpleCell(MovableCell):
     def interact_with(self, board, x, y):
-        # Use directions to perform repulsion in all four directions
         for dx, dy in self.directions:
             self.push_recursive(board, x, y, dx, dy)
 
@@ -52,7 +49,6 @@ class PurpleCell(MovableCell):
         current_x, current_y = x + dx, y + dy
         while board.is_within_bounds(current_x, current_y):
             if board.is_empty(current_x, current_y) :
-            # or board.is_target(current_x, current_y)
                 current_x += dx
                 current_y += dy
             elif isinstance(board.get_piece(current_x, current_y), Block):
@@ -63,20 +59,17 @@ class PurpleCell(MovableCell):
 
 
     def push_cells(self, board, x, y, dx, dy):
-        # Determine the next cell in the push direction
         next_x, next_y = x + dx, y + dy
 
         if not board.is_within_bounds(next_x, next_y):
-            return False  # Stop if out of bounds
+            return False  
 
         if board.is_empty(next_x, next_y):
-            # If the next cell is empty, move the current cell there
             board.move_piece(x, y, next_x, next_y)
-            return True  # Move was successful
+            return True  
         else:
-            # If the next cell is occupied, attempt to push it
             if self.push_cells(board, next_x, next_y, dx, dy):
-                # If the push was successful, move the current cell into the next position
+                # If the push was successful, move the current cell 
                 board.move_piece(x, y, next_x, next_y)
                 return True
         return False  # Push was not successful due to blockage

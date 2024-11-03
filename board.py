@@ -43,13 +43,11 @@ class Board:
     def move_magnet(self, start_row, start_col, dest_row, dest_col):
         cell = self.grid[start_row][start_col]["piece"]
         if isinstance(cell, MovableCell) and self.grid[dest_row][dest_col]["piece"] is None:
-            # Perform the move
             self.grid[start_row][start_col]["piece"] = None
             self.grid[dest_row][dest_col]["piece"] = cell
-            # Trigger interactions for the moved cell
             cell.interact_with(self, dest_row, dest_col)
             return True
-        return False  # Move not possible
+        return False 
 
 
         

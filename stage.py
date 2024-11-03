@@ -30,6 +30,5 @@ class Stage:
         return True
 
     def display(self):
-        # Display the current move count and maximum moves
         print(f"Current Move: {self.current_moves}/{self.max_moves}")
         self.board.display()
