@@ -11,6 +11,7 @@ class Board:
         self.target_positions = set(target_positions) 
         self.load_layout(layout)
 
+
     def load_layout(self, layout):
         for i, row in enumerate(layout):
             for j, cell in enumerate(row):
