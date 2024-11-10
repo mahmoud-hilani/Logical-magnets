@@ -93,6 +93,7 @@ def bfs(initial_state):
         
         for move in state.possible_moves():
             new_state = state.apply_move(move)
+            
             layout_tuple = new_state.layout_tuple()
             if layout_tuple not in visited:
                 visited.add(layout_tuple)
@@ -107,15 +108,21 @@ def dfs(initial_state):
     while stack:
         state = stack.pop()
         
+        # Check if the goal state is reached
         if state.goal_state():
             return reconstruct_path(state)  # Return list of states or moves
         
-        for move in state.possible_moves():
-            new_state = state.apply_move(move)
-            layout_tuple = new_state.layout_tuple()
-            if layout_tuple not in visited:
-                visited.add(layout_tuple)
-                stack.append(new_state)
+        # Only continue if the current move count is less than the maximum allowed moves
+        if state.current_moves < state.max_moves:
+            for move in state.possible_moves():
+                new_state = state.apply_move(move)
+                
+                # Only proceed if the new state hasn't been visited
+                layout_tuple = new_state.layout_tuple()
+                if layout_tuple not in visited:
+                    visited.add(layout_tuple)
+                    stack.append(new_state)
+                    
     return []  # No solution found
 
 def reconstruct_path(goal_state):
@@ -135,7 +142,7 @@ def play_moves(state, moves):
 
 
 if __name__ == "__main__":
-    initial_state = STAGES[2]
+    initial_state = STAGES[4]
     
     # Find path using BFS or DFS
     path = dfs(initial_state)  # Or use dfs(initial_state)

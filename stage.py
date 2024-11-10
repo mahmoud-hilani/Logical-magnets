@@ -56,9 +56,15 @@ class State:
         start_pos, end_pos = move
         start_row, start_col = start_pos
         end_row, end_col = end_pos
+
+        
         
         new_state = deepcopy(self)
         new_state.parent = self  # Set current state as the parent of the new state
+        print(f"Applying move: ({start_row}, {start_col}) -> ({end_row}, {end_col})")
+
+
+
 
         # Apply the move in the new state
         if new_state.board.move_magnet(start_row, start_col, end_row, end_col):
@@ -68,4 +74,4 @@ class State:
     def layout_tuple(self):
         """Return a hashable tuple representation of the board layout."""
         # Create a tuple of tuples from the grid for hashable representation
-        return tuple(tuple(cell["piece"] for cell in row) for row in self.board.grid)
+        return tuple(tuple(cell for cell in row) for row in self.board.grid)
