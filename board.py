@@ -7,7 +7,7 @@ class Board:
         self.width = width
         self.height = height
         self.grid = [[ None for _ in range(width)] for _ in range(height)]
-          # Use set for to search fast and if cell and target in the same place
+
         self.target_positions = set(target_positions) 
         self.load_layout(layout)
 

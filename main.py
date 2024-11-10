@@ -11,7 +11,7 @@ STAGES = [#0
             [".", "."],
           
         ],
-        target_positions={(2, 1),(0, 1)},  # Pass target positions as a set
+        target_positions={(2, 1),(0, 1)},  
         max_moves=5
     ),    State(
         layout=[
@@ -22,7 +22,7 @@ STAGES = [#0
         ],
         target_positions={
                           (1, 1),(1, 3),
-                          },  # Pass target positions as a set
+                          }, 
         max_moves=3
     ),
     # 2
@@ -36,7 +36,7 @@ STAGES = [#0
     ],
     target_positions={
         (0, 2), (2, 0), (2,4), (2, 0), (4,2)
-    },  # Only specify target positions here
+    },  
     max_moves=2
 ),
 
@@ -50,7 +50,7 @@ STAGES = [#0
         ],
         target_positions={(0, 0),(0, 2)
                           ,(1, 0),(1, 2),
-                          (3,0)},  # Pass target positions as a set
+                          (3,0)},  
         max_moves=2
     ),
     # 4
@@ -62,7 +62,7 @@ STAGES = [#0
     ],
     target_positions={
         (0, 3), (2, 3)
-    },  # Only specify target positions here
+    }, 
     max_moves=4
 ),
     State(
@@ -75,7 +75,7 @@ STAGES = [#0
         ],
         target_positions={(0, 0),(0, 2)
                           ,(1, 0),(1, 2),
-                          (3,0)},  # Pass target positions as a set
+                          (3,0)},  
         max_moves=2
     ),
 ]
@@ -89,7 +89,7 @@ def bfs(initial_state):
         state = queue.popleft()
         
         if state.goal_state():
-            return reconstruct_path(state)  # Return list of states or moves
+            return reconstruct_path(state)  
         
         for move in state.possible_moves():
             new_state = state.apply_move(move)
@@ -98,7 +98,7 @@ def bfs(initial_state):
             if layout_tuple not in visited:
                 visited.add(layout_tuple)
                 queue.append(new_state)
-    return []  # No solution found
+    return []  
 
 def dfs(initial_state):
     stack = [initial_state]
@@ -108,44 +108,43 @@ def dfs(initial_state):
     while stack:
         state = stack.pop()
         
-        # Check if the goal state is reached
         if state.goal_state():
-            return reconstruct_path(state)  # Return list of states or moves
+            return reconstruct_path(state)  
         
-        # Only continue if the current move count is less than the maximum allowed moves
         if state.current_moves < state.max_moves:
             for move in state.possible_moves():
                 new_state = state.apply_move(move)
                 
-                # Only proceed if the new state hasn't been visited
+
                 layout_tuple = new_state.layout_tuple()
                 if layout_tuple not in visited:
                     visited.add(layout_tuple)
                     stack.append(new_state)
                     
-    return []  # No solution found
+    return []  
 
 def reconstruct_path(goal_state):
     """Backtrack from the goal state to the initial state, returning a list of moves."""
     path = []
     state = goal_state
-    while state.parent:  # Traverse until reaching the initial state (where parent is None)
-        path.append(state)  # Alternatively, store (move) information if preferred
+    while state.parent:  
+        path.append(state.last_move)  
         state = state.parent
-    path.reverse()
+    path.reverse()  
     return path
+
 
 def play_moves(state, moves):
     """Play a sequence of moves on the given initial state."""
     for step in moves:
-        step.display()  # Display each state
+        state.play_move(step)
 
 
 if __name__ == "__main__":
     initial_state = STAGES[4]
     
-    # Find path using BFS or DFS
-    path = dfs(initial_state)  # Or use dfs(initial_state)
+
+    path = dfs(initial_state)  
     
     if path:
         print("Solution found! Playing moves:")
