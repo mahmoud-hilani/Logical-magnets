@@ -6,7 +6,7 @@ class Cell:
     def __str__(self):
         return "."  
 class MovableCell(Cell, ABC):
-    # Define directions for movement
+
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
     @abstractmethod
@@ -69,11 +69,10 @@ class PurpleCell(MovableCell):
             return True  
         else:
             if self.push_cells(board, next_x, next_y, dx, dy):
-                # If the push was successful, move the current cell 
+
                 board.move_piece(x, y, next_x, next_y)
                 return True
-        return False  # Push was not successful due to blockage
-
+        return False  
     # def push_cell(self, board, x, y, dx, dy):
     #     next_x, next_y = x + dx, y + dy
     #     if board.is_within_bounds(next_x, next_y) and board.is_empty(next_x, next_y):

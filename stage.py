@@ -1,26 +1,32 @@
-# stage.py
-
 from board import Board
-from cell import MovableCell  # Import MovableCell and any other necessary classes here
+from cell import MovableCell 
 from copy import deepcopy
 
 class State:
-    def __init__(self, layout, target_positions, max_moves, parent=None):
+    def __init__(self, layout, target_positions, max_moves, parent=None, last_move=None):
         self.height = len(layout)
         self.width = len(layout[0]) if layout else 0
         self.board = Board(self.width, self.height, layout, target_positions)
         self.max_moves = max_moves
         self.current_moves = 0
-        self.parent = parent  # Add a parent state for backtracking
+        self.parent = parent  
+        self.last_move = last_move 
 
-    def play_move(self, start_row, start_col, dest_row, dest_col):
+
+
+    def play_move(self, move):
+
+        start_pos, end_pos = move
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
         if self.current_moves >= self.max_moves:
             print("No moves left!")
             return
 
-        if self.board.move_magnet(start_row, start_col, dest_row, dest_col):
+        if self.board.move_magnet(start_row, start_col, end_row, end_col):
             self.current_moves += 1
-            print(f"Move {self.current_moves}/{self.max_moves}")
+            self.display()
             if self.goal_state():
                 print("Congratulations! All target cells are filled. Goal state achieved!")
         else:
@@ -42,9 +48,9 @@ class State:
         for row in range(self.board.height):
             for col in range(self.board.width):
                 piece = self.board.get_piece(row, col)
-                # Check if the current cell contains a movable piece
+
                 if isinstance(piece, MovableCell):
-                    # Find all empty cells on the board where this piece could move
+
                     for target_row in range(self.board.height):
                         for target_col in range(self.board.width):
                             if self.board.is_empty(target_row, target_col):
@@ -56,22 +62,22 @@ class State:
         start_pos, end_pos = move
         start_row, start_col = start_pos
         end_row, end_col = end_pos
-
         
+        if self.current_moves >= self.max_moves:
+            print("No moves left!")
+            return
         
         new_state = deepcopy(self)
-        new_state.parent = self  # Set current state as the parent of the new state
+        new_state.parent = self 
+        new_state.last_move = move  
         print(f"Applying move: ({start_row}, {start_col}) -> ({end_row}, {end_col})")
 
 
-
-
-        # Apply the move in the new state
         if new_state.board.move_magnet(start_row, start_col, end_row, end_col):
             new_state.current_moves += 1
         return new_state
 
     def layout_tuple(self):
         """Return a hashable tuple representation of the board layout."""
-        # Create a tuple of tuples from the grid for hashable representation
+
         return tuple(tuple(cell for cell in row) for row in self.board.grid)
