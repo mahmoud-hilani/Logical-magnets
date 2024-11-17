@@ -1,141 +1,13 @@
 # main.py
-
-from stage import State
+from Algorithims import *
+from stages import STAGES
+from state import State
 from collections import deque
 
-STAGES = [#0
-    State(
-        layout=[
-            [".", "."],
-            ["P", "G"],
-            [".", "."],
-          
-        ],
-        target_positions={(2, 1),(0, 1)},  
-        max_moves=5
-    ),    State(
-        layout=[
-            [".", ".",".","."],
-            [".", ".","G","."],
-            ["P", ".",".","."],
-          
-        ],
-        target_positions={
-                          (1, 1),(1, 3),
-                          }, 
-        max_moves=3
-    ),
-    # 2
-    State(
-    layout=[
-        [".", ".", ".", ".", "."],
-        [".", ".", "G", "", "."],
-        [".", "G", ".", "G", "."],
-        ["P", ".", "G", ".", "."],
-        [".", ".", ".", ".", "."],
-    ],
-    target_positions={
-        (0, 2), (2, 0), (2,4), (2, 0), (4,2)
-    },  
-    max_moves=2
-),
-
-    State(
-        layout=[
-            [".", "B","."],
-            ["G", "B","G"],
-            ["G", "B","G"],
-            [".", "P","."],
-          
-        ],
-        target_positions={(0, 0),(0, 2)
-                          ,(1, 0),(1, 2),
-                          (3,0)},  
-        max_moves=2
-    ),
-    # 4
-    State(
-    layout=[
-        ["B", "B", "B", "."],
-        ["P", ".", "G", "."],
-        [".", ".", ".", "."],
-    ],
-    target_positions={
-        (0, 3), (2, 3)
-    }, 
-    max_moves=4
-),
-    State(
-        layout=[
-            [".", "B","."],
-            ["G", "B","G"],
-            ["G", "B","G"],
-            [".", "P","."],
-          
-        ],
-        target_positions={(0, 0),(0, 2)
-                          ,(1, 0),(1, 2),
-                          (3,0)},  
-        max_moves=2
-    ),
-]
-
-def bfs(initial_state):
-    queue = deque([initial_state])
-    visited = set()
-    visited.add(initial_state.layout_tuple())
-    
-    while queue:
-        state = queue.popleft()
-        
-        if state.goal_state():
-            return reconstruct_path(state)  
-        
-        for move in state.possible_moves():
-            new_state = state.apply_move(move)
-            
-            layout_tuple = new_state.layout_tuple()
-            if layout_tuple not in visited:
-                visited.add(layout_tuple)
-                queue.append(new_state)
-    return []  
-
-def dfs(initial_state):
-    stack = [initial_state]
-    visited = set()
-    visited.add(initial_state.layout_tuple())
-    
-    while stack:
-        state = stack.pop()
-        
-        if state.goal_state():
-            return reconstruct_path(state)  
-        
-        if state.current_moves < state.max_moves:
-            for move in state.possible_moves():
-                new_state = state.apply_move(move)
-                
-
-                layout_tuple = new_state.layout_tuple()
-                if layout_tuple not in visited:
-                    visited.add(layout_tuple)
-                    stack.append(new_state)
-                    
-    return []  
-
-def reconstruct_path(goal_state):
-    """Backtrack from the goal state to the initial state, returning a list of moves."""
-    path = []
-    state = goal_state
-    while state.parent:  
-        path.append(state.last_move)  
-        state = state.parent
-    path.reverse()  
-    return path
 
 
 def play_moves(state, moves):
-    """Play a sequence of moves on the given initial state."""
+    state.display()
     for step in moves:
         state.play_move(step)
 
@@ -144,7 +16,7 @@ if __name__ == "__main__":
     initial_state = STAGES[4]
     
 
-    path = dfs(initial_state)  
+    path = ucs(initial_state)
     
     if path:
         print("Solution found! Playing moves:")
